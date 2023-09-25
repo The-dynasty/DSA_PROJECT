@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>N-Queens Solver</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            margin: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            background-image: url(https://rare-gallery.com/mocahbig/1344546-Black-amp-WhiteChess-4k-Ultra-HD-Wallpaper.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+    .main {
+        text-align: center;
+        background-color: rgba(54, 62, 69, 0.45);
+            background-size: 100% 100%;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column ;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            
+    }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            color: aliceblue;
+        }
+
+        div {
+            margin: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 50px;
+            padding: 5px;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 40px;
+            padding: 10px;
+            width: 200px; /* Add margin for spacing */
+        }
+
+        #solutions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .solution {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: inline-block;
+        }
+
+        .board-row {
+            display: flex;
+            justify-content: center; /* Center-align rows */
+        }
+
+        .board-cell {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .queen {
+            color: red;
+        }
+
+        .empty {
+            color: black;
+        }
+
+        /* Center-align text box and button */
+        .center-align {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .board-size{
+            color: aliceblue;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+<h1>N-Queens Solver</h1>
+<div>
+    <label for="board-size">Enter Board Size (N):</label>
+    <div class="center-align">
+        <input type="number" id="board-size" min="4" value="8">
+        <button onclick="solveNQueens()">Solve</button>
+    </div>
+</div>
+<div id="solutions"></div>
+
+<script>
+    function isSafe(board, row, col, n) {
+        for (let i = 0; i < col; i++) {
+            if (board[row][i] === 1) return false;
+        }
+        for (let i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+            if (board[i][j] === 1) return false;
+        }
+        for (let i = row, j = col; i < n && j >= 0; i++, j--) {
+            if (board[i][j] === 1) return false;
+        }
+        return true;
+    }
+
+    function solveNQueens() {
+        const n = parseInt(document.getElementById("board-size").value);
+        const solutionsContainer = document.getElementById("solutions");
+        solutionsContainer.innerHTML = '';
+
+        const board = Array.from({ length: n }, () => Array(n).fill(0));
+
+        function solve(col) {
+            if (col === n) {
+                // Found a solution, add it to the solutionsContainer
+                const solutionDiv = document.createElement("div");
+                solutionDiv.classList.add("solution");
+                const boardDiv = document.createElement("div");
+
+                for (let i = 0; i < n; i++) {
+                    const rowDiv = document.createElement("div");
+                    rowDiv.classList.add("board-row");
+                    for (let j = 0; j < n; j++) {
+                        const cellDiv = document.createElement("div");
+                        cellDiv.classList.add("board-cell");
+                        if (board[i][j] === 1) {
+                            cellDiv.textContent = "♛";
+                            cellDiv.classList.add("queen");
+                        } else {
+                            cellDiv.textContent = " ";
+                            cellDiv.classList.add("empty");
+                        }
+                        rowDiv.appendChild(cellDiv);
+                    }
+                    boardDiv.appendChild(rowDiv);
+                }
+
+                solutionDiv.appendChild(boardDiv);
+                solutionsContainer.appendChild(solutionDiv);
+                return;
+            }
+
+            
+            for (let i = 0; i < n; i++) {
+                if (isSafe(board, i, col, n)) {
+                    board[i][col] = 1;
+                    solve(col + 1);
+                    board[i][col] = 0;
+                }
+            }
+        }
+
+        solve(0);
+    }
+</script>
+</div>
+</body>
+</html>
