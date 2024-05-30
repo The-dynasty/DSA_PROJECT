@@ -10,20 +10,20 @@
             height: 100vh;
             margin: 0;
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            background-image: url('your-background-image-url.jpg'); /* Replace 'your-background-image-url.jpg' with the actual image URL */
+            background-image: url('https://wallpapers.com/images/featured/mathematics-snya5mv2dogewetc.jpg');
             background-size: cover;
         }
 
         h1 {
             text-align: center;
             font-size: 3em;
-            color: #333;
+            color: aliceblue;
         }
 
         p {
             font-size: 1.5em;
             text-align: center;
-            color: #333;
+            color: aliceblue;
         }
 
         .main {
@@ -31,38 +31,52 @@
             background-color: rgba(54, 62, 69, 0.45);
             backdrop-filter: blur(10px);
             display: flex;
-            flex-direction: column ;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
             border-radius: 10px;
+            width: 80%;
+            max-width: 600px; /* Limit width for larger screens */
         }
 
-        /* Center-align text box and button */
         .center-align {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Style the button */
         button {
-            padding: 5px 10px;
+            padding: 10px;
             background-color: #007bff;
             color: white;
             border: none;
             cursor: pointer;
             margin-top: 10px;
             border-radius: 40px;
-            padding: 10px;
             width: 200px;
         }
-        #inputField{
+
+        #inputField {
             width: 300px;
             height: 40px;
             border-radius: 50px;
             padding-left: 10px;
             font-size: 2em;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .main {
+                width: 90%; /* Adjust width for smaller screens */
+            }
+            #inputField {
+                width: 80%; /* Adjust input field width for smaller screens */
+            }
         }
     </style>
 </head>
@@ -72,7 +86,10 @@
         <p>Enter the number of random numbers to generate:</p>
         <div class="center-align">
             <input type="number" id="inputField" min="1">
-            <button onclick="generateAndSort()">Generate & Sort</button>
+            <div class="button-group">
+                <button onclick="generateAndSort()">Generate & Sort</button>
+                <button onclick="resetFields()">Reset</button>
+            </div>
         </div>
         <p>Unsorted Array:</p>
         <p id="unsortedArray"></p>
@@ -84,7 +101,7 @@
             const randomArray = [];
 
             for (let i = 0; i < n; i++) {
-                randomArray.push(Math.floor(Math.random() * 100)); // Generate random numbers between 0 and 99
+                randomArray.push(Math.floor(Math.random() * 100000000000000)); // Generate random numbers between 0 and 99
             }
 
             return randomArray;
@@ -124,6 +141,12 @@
 
             document.getElementById("unsortedArray").textContent = "Unsorted Array: " + unsortedArray.join(', ');
             document.getElementById("sortedArray").textContent = "Sorted Array: " + sortedArray.join(', ');
+        }
+
+        function resetFields() {
+            document.getElementById("inputField").value = '';
+            document.getElementById("unsortedArray").textContent = '';
+            document.getElementById("sortedArray").textContent = '';
         }
     </script>
 </body>
