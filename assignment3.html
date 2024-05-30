@@ -7,7 +7,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
+            min-height: 100vh;
             margin: 0;
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             background-image: url(https://rare-gallery.com/mocahbig/1344546-Black-amp-WhiteChess-4k-Ultra-HD-Wallpaper.jpg);
@@ -15,49 +15,47 @@
             background-size: cover;
         }
         
-    .main {
-        text-align: center;
-        background-color: rgba(54, 62, 69, 0.45);
-            background-size: 100% 100%;
+        .main {
+            text-align: center;
+            background-color: rgba(54, 62, 69, 0.75); /* Darker background for better contrast */
             backdrop-filter: blur(10px);
             display: flex;
-            flex-direction: column ;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100%;
-            width: 100%;
-            
-    }
-
-        h1 {
-            text-align: center;
-            font-size: 3em;
-            color: aliceblue;
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            margin: 20px;
+            border-radius: 15px; /* Rounded corners for a modern look */
         }
 
-        div {
-            margin: 20px;
+        h1 {
+            font-size: 3em;
+            color: aliceblue;
+            margin: 20px 0;
         }
 
         label {
             font-weight: bold;
+            color: aliceblue;
         }
 
         input {
-            width: 50px;
+            width: 60px;
             padding: 5px;
+            margin-top: 10px;
         }
 
         button {
-            padding: 5px 10px;
+            padding: 10px;
             background-color: #007bff;
             color: white;
             border: none;
             cursor: pointer;
             margin-top: 10px;
             border-radius: 40px;
-            padding: 10px;
-            width: 200px; /* Add margin for spacing */
+            width: 200px;
         }
 
         #solutions {
@@ -72,20 +70,29 @@
             padding: 10px;
             border: 1px solid #ccc;
             display: inline-block;
+            animation: fadeIn 0.5s ease-in-out;
+            backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.75); /* Background for better contrast */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .board-row {
             display: flex;
-            justify-content: center; /* Center-align rows */
+            justify-content: center;
         }
 
         .board-cell {
-            width: 30px;
-            height: 30px;
             text-align: center;
             vertical-align: middle;
             font-size: 20px;
-            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .queen {
@@ -96,93 +103,179 @@
             color: black;
         }
 
-        /* Center-align text box and button */
+        .black-cell {
+            background-color: black;
+            color: white;
+        }
+
+        .white-cell {
+            background-color: white;
+            color: black;
+        }
+
         .center-align {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .board-size{
-            color: aliceblue;
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            button {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            input {
+                width: 100%;
+                max-width: 60px;
+            }
+
+            .main {
+                width: 100%;
+                max-width: none;
+                padding: 10px;
+            }
+
+            .board-cell {
+                width: 20px; /* Smaller cells for smaller screens */
+                height: 20px;
+                font-size: 16px;
+            }
+
+            .solution {
+                margin: 5px;
+                padding: 5px;
+            }
+        }
+
+        @media (min-width: 601px) {
+            .board-cell {
+                width: 30px; /* Default cell size */
+                height: 30px;
+                font-size: 20px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .board-cell {
+                width: 40px; /* Larger cells for larger screens */
+                height: 40px;
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
 <div class="main">
-<h1>N-Queens Solver</h1>
-<div>
-    <label for="board-size">Enter Board Size (N):</label>
-    <div class="center-align">
-        <input type="number" id="board-size" min="4" value="8">
-        <button onclick="solveNQueens()">Solve</button>
+    <h1>N-Queens Solver</h1>
+    <div>
+        <label for="board-size">Enter Board Size (N):</label>
+        <div class="center-align">
+            <input type="number" id="board-size" min="4" value="8">
+            <button onclick="solveNQueens()">Solve</button>
+        </div>
     </div>
-</div>
-<div id="solutions"></div>
+    <div id="solutions"></div>
 
-<script>
-    function isSafe(board, row, col, n) {
-        for (let i = 0; i < col; i++) {
-            if (board[row][i] === 1) return false;
+    <script>
+        function isSafe(board, row, col, n) {
+            for (let i = 0; i < col; i++) {
+                if (board[row][i] === 1) return false;
+            }
+            for (let i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+                if (board[i][j] === 1) return false;
+            }
+            for (let i = row, j = col; i < n && j >= 0; i++, j--) {
+                if (board[i][j] === 1) return false;
+            }
+            return true;
         }
-        for (let i = row, j = col; i >= 0 && j >= 0; i--, j--) {
-            if (board[i][j] === 1) return false;
-        }
-        for (let i = row, j = col; i < n && j >= 0; i++, j--) {
-            if (board[i][j] === 1) return false;
-        }
-        return true;
-    }
 
-    function solveNQueens() {
-        const n = parseInt(document.getElementById("board-size").value);
-        const solutionsContainer = document.getElementById("solutions");
-        solutionsContainer.innerHTML = '';
+        function solveNQueens() {
+            const n = parseInt(document.getElementById("board-size").value);
+            const solutionsContainer = document.getElementById("solutions");
+            solutionsContainer.innerHTML = '';
 
-        const board = Array.from({ length: n }, () => Array(n).fill(0));
+            const board = Array.from({ length: n }, () => Array(n).fill(0));
 
-        function solve(col) {
-            if (col === n) {
-                // Found a solution, add it to the solutionsContainer
-                const solutionDiv = document.createElement("div");
-                solutionDiv.classList.add("solution");
-                const boardDiv = document.createElement("div");
+            function solve(col) {
+                if (col === n) {
+                    const solutionDiv = document.createElement("div");
+                    solutionDiv.classList.add("solution");
+                    const boardDiv = document.createElement("div");
+
+                    for (let i = 0; i < n; i++) {
+                        const rowDiv = document.createElement("div");
+                        rowDiv.classList.add("board-row");
+                        for (let j = 0; j < n; j++) {
+                            const cellDiv = document.createElement("div");
+                            cellDiv.classList.add("board-cell");
+                            if (board[i][j] === 1) {
+                                cellDiv.textContent = "♛";
+                                cellDiv.classList.add("queen");
+                            } else {
+                                cellDiv.textContent = " ";
+                                cellDiv.classList.add("empty");
+                            }
+
+                            // Apply black and white checkerboard pattern
+                            if ((i + j) % 2 === 0) {
+                                cellDiv.classList.add("white-cell");
+                            } else {
+                                cellDiv.classList.add("black-cell");
+                            }
+
+                            rowDiv.appendChild(cellDiv);
+                        }
+                        boardDiv.appendChild(rowDiv);
+                    }
+
+                    solutionDiv.appendChild(boardDiv);
+                    solutionsContainer.appendChild(solutionDiv);
+                    return;
+                }
 
                 for (let i = 0; i < n; i++) {
-                    const rowDiv = document.createElement("div");
-                    rowDiv.classList.add("board-row");
-                    for (let j = 0; j < n; j++) {
-                        const cellDiv = document.createElement("div");
-                        cellDiv.classList.add("board-cell");
-                        if (board[i][j] === 1) {
-                            cellDiv.textContent = "♛";
-                            cellDiv.classList.add("queen");
-                        } else {
-                            cellDiv.textContent = " ";
-                            cellDiv.classList.add("empty");
-                        }
-                        rowDiv.appendChild(cellDiv);
+                    if (isSafe(board, i, col, n)) {
+                        board[i][col] = 1;
+                        solve(col + 1);
+                        board[i][col] = 0;
                     }
-                    boardDiv.appendChild(rowDiv);
-                }
-
-                solutionDiv.appendChild(boardDiv);
-                solutionsContainer.appendChild(solutionDiv);
-                return;
-            }
-
-            
-            for (let i = 0; i < n; i++) {
-                if (isSafe(board, i, col, n)) {
-                    board[i][col] = 1;
-                    solve(col + 1);
-                    board[i][col] = 0;
                 }
             }
+
+            solve(0);
         }
 
-        solve(0);
-    }
-</script>
+        window.addEventListener('resize', adjustBoardSize);
+
+        function adjustBoardSize() {
+            const boardCells = document.querySelectorAll('.board-cell');
+            if (window.innerWidth <= 600) {
+                boardCells.forEach(cell => {
+                    cell.style.width = '20px';
+                    cell.style.height = '20px';
+                    cell.style.fontSize = '16px';
+                });
+            } else if (window.innerWidth >= 1200) {
+                boardCells.forEach(cell => {
+                    cell.style.width = '40px';
+                    cell.style.height = '40px';
+                    cell.style.fontSize = '24px';
+                });
+            } else {
+                boardCells.forEach(cell => {
+                    cell.style.width = '30px';
+                    cell.style.height = '30px';
+                    cell.style.fontSize = '20px';
+                });
+            }
+        }
+    </script>
 </div>
 </body>
 </html>
